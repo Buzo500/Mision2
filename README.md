@@ -4,17 +4,17 @@ Proyecto de la misión 2 de Programación Web I: una aplicación para descubrir 
 
 ## Estado del proyecto
 
-**Fase 2 de 5 terminada.** El buscador consulta TheMealDB al pulsar Buscar o Enter y muestra tarjetas con fotografía, nombre, categoría y procedencia. Hay estados visibles de inicio, carga, error y sin resultados, además de un botón para reintentar una consulta fallida.
+**Fase 3 de 5 terminada.** El buscador consulta TheMealDB al pulsar Buscar o Enter y muestra tarjetas con fotografía, nombre, categoría y procedencia. Permite filtrar las recetas por categoría, consultar un resumen de la búsqueda y abrir los ingredientes y la preparación en la misma página. Se mantienen los estados de inicio, carga, error y sin resultados, y el botón para reintentar.
 
 | Fase | Contenido | Estado |
 | --- | --- | --- |
 | 1 | Vite, HTML, CSS y módulos iniciales | Terminada |
 | 2 | Búsqueda real, tarjetas y estados de carga, error y vacío | Terminada |
-| 3 | Filtro por categoría, resumen y detalle de receta | Pendiente |
+| 3 | Filtro por categoría, resumen y detalle de receta | Terminada |
 | 4 | Caché de respuestas en localStorage | Pendiente |
 | 5 | Revisión de casos límite y documentación final | Pendiente |
 
-El selector de categorías permanece desactivado hasta la fase 3. La caché todavía no está implementada: repetir una búsqueda vuelve a consultar la API.
+El filtro y el detalle aprovechan los datos de la búsqueda actual, sin nuevas peticiones. La caché todavía no está implementada: repetir una búsqueda vuelve a consultar la API. El almacenamiento en `localStorage` corresponde a la fase 4.
 
 ## Puesta en marcha
 
@@ -46,20 +46,30 @@ npm run preview
 
 La búsqueda se realiza por nombre de plato, principalmente en inglés. No se hace una petición por cada tecla pulsada. El botón de reintento utiliza la última consulta fallida, aunque se haya escrito otro texto después.
 
+## Filtro, resumen y detalle
+
+- **Categorías:** el selector contiene las categorías presentes en la búsqueda. `filtrarPorCategoria` utiliza `filter`; la opción «Todas las categorías» tiene el valor vacío y permite ver de nuevo todas las recetas.
+- **Resumen:** `resumirCategorias` utiliza `reduce` para acumular un array de grupos con su categoría y cantidad. `find` busca si el grupo ya existe: si existe, suma uno; si no, lo añade. El resumen «En esta búsqueda» cuenta todas las recetas recibidas y no cambia al seleccionar una categoría. El contador sobre las tarjetas sí refleja las recetas visibles.
+- **Ingredientes:** TheMealDB devuelve veinte pares de campos numerados. `Array.from` y `map` los convierten en objetos con nombre y cantidad; `filter` descarta los nombres vacíos. Una cantidad ausente se deja en blanco.
+- **Detalle:** un único evento `click` en el contenedor de tarjetas localiza el botón con `closest`. Su atributo `data-indice` indica la posición dentro del array de recetas visibles, de modo que también funciona después de filtrar o si falta el identificador de la API.
+- **Nuevas búsquedas:** se vacían los datos anteriores, se restablece el selector y se ocultan el resumen y el detalle. Cambiar de categoría también cierra el detalle para que no quede abierta una receta ajena a las tarjetas visibles.
+
+`recetasCargadas` conserva el resultado completo y `recetasVisibles` contiene el resultado del filtro. Los ingredientes y las instrucciones ya vienen en la respuesta de búsqueda: no hace falta consultar otro endpoint. Los nombres, ingredientes y preparación se muestran en el idioma original de la API.
+
 ## Estructura
 
 ```text
 index.html       Estructura de la página y controles
-src/main.js      Eventos y coordinación de la búsqueda
+src/main.js      Eventos y coordinación de búsqueda, filtro y detalle
 src/api.js       Petición HTTP y lectura de la respuesta
-src/logica.js    Transformación de los datos de la API
-src/render.js    Estados y tarjetas en el DOM
-src/style.css    Diseño y estilos de las tarjetas
+src/logica.js    Transformación, filtrado y resumen de los datos
+src/render.js    Estados, categorías, tarjetas y detalle en el DOM
+src/style.css    Diseño, tarjetas, resumen y detalle
 public/images/  Fotografía estática de la portada
 package.json    Módulos ES, scripts y dependencia de Vite
 ```
 
-`cache.js` se incorporará en la fase 4. Las funciones de filtrado y resumen se añadirán a `logica.js` en la fase 3.
+`cache.js` se incorporará en la fase 4.
 
 ## Estados y datos incompletos
 
@@ -68,15 +78,15 @@ package.json    Módulos ES, scripts y dependencia de Vite
 - **Resultados:** muestra cuántas recetas se han recibido y sus tarjetas.
 - **Sin resultados:** `meals: null` se convierte en un array vacío; se propone probar otro nombre.
 - **Error:** los errores HTTP, de red, de JSON o de respuesta inesperada llegan al `catch` y permiten reintentar. No se confunden con una búsqueda sin coincidencias.
-- **Datos incompletos:** los campos ausentes muestran textos como «Sin categoría» u «Origen no disponible». Si falta una imagen o no se puede cargar, aparece «Imagen no disponible».
+- **Datos incompletos:** los campos ausentes muestran textos como «Sin categoría» u «Origen no disponible». Si falta una imagen o no se puede cargar, aparece «Imagen no disponible». El detalle avisa si no hay ingredientes o preparación.
 
-`map` crea un array nuevo con objetos sencillos, sin modificar los datos originales. `forEach` se utiliza para añadir las tarjetas al DOM, una acción por receta. Los datos de la API y la búsqueda se insertan como texto, sin `innerHTML`.
+`map` crea un array nuevo con objetos sencillos, sin modificar los datos originales. `filter` devuelve un array nuevo y `reduce` modifica únicamente los grupos de su propio acumulador. `forEach` se utiliza para añadir elementos al DOM. Los datos de la API y la búsqueda se insertan como texto, sin `innerHTML`.
 
 ## Diseño
 
 Se mantiene el diseño editorial de la fase 1: fondo marfil, verde oliva, titulares con Georgia, fotografía protagonista y separadores finos. El contenido ocupa el 92% de la ventana, sin un límite global de 1280 píxeles que lo estreche en monitores grandes. El objetivo actual es el uso en PC.
 
-Las tarjetas mantienen esos colores y tipografías. Su cuadrícula utiliza CSS Grid. Hay etiquetas para los controles, foco visible, un mensaje con `role="status"` y `aria-live="polite"`, y un enlace para saltar al contenido. Al terminar la búsqueda se devuelve el foco al campo de entrada. El desplazamiento suave se desactiva si el usuario prefiere reducir el movimiento.
+Las tarjetas mantienen esos colores y tipografías. Su cuadrícula utiliza CSS Grid. El detalle separa los ingredientes y la preparación en dos columnas y conserva los saltos de línea del texto original con `white-space: pre-line`. Hay etiquetas para los controles, foco visible, un mensaje con `role="status"` y `aria-live="polite"`, y un enlace para saltar al contenido. Al terminar la búsqueda se devuelve el foco al campo de entrada. Al abrir el detalle, el foco pasa a su título; al cerrarlo, vuelve al botón de la tarjeta. El desplazamiento suave se desactiva si el usuario prefiere reducir el movimiento.
 
 ## Comprobaciones realizadas en la fase 2
 
@@ -91,6 +101,19 @@ Las tarjetas mantienen esos colores y tipografías. Su cuadrícula utiliza CSS G
 
 Las pruebas de integración se ejecutaron en Node con jsdom como herramienta temporal externa al repositorio. No se ha añadido una dependencia de pruebas a la aplicación. Estas pruebas comprueban el comportamiento del DOM, pero no el aspecto visual en un navegador. La revisión visual de las nuevas tarjetas queda pendiente porque el permiso del navegador se había denegado.
 
+## Comprobaciones realizadas en la fase 3
+
+- `npm run build`, `node --check` en los cuatro módulos y `git diff --check`: correctos.
+- Funciones de transformación, filtro y resumen con datos congelados: no modifican la entrada. Comprobados ingredientes vacíos, ingrediente número 20, categorías repetidas y campos ausentes.
+- Integración del DOM: opciones sin categorías duplicadas, recuentos correctos, filtro local y vuelta a todas las recetas. El resumen conserva el total de la búsqueda mientras el contador de tarjetas cambia.
+- Abrir una receta después de filtrar, pulsar la flecha dentro del botón y cerrar el detalle: contenido y foco correctos, sin peticiones adicionales.
+- Nueva búsqueda, espacios, carga, vacío y error: se limpian el detalle, las categorías y el resumen anteriores. Un reintento correcto recupera los controles y los datos.
+- Detalle sin identificador, sin ingredientes o sin instrucciones; textos que contienen HTML: valores de reserva y contenido mostrado como texto.
+- Consulta real `Arrabiata`: una receta de categoría `Vegetarian`, ocho ingredientes y preparación disponible en el momento de la comprobación.
+- Repetidas las pruebas de integración de la fase 2: correctas.
+
+La revisión visual en un navegador sigue pendiente; las comprobaciones de esta fase verifican datos y comportamiento del DOM.
+
 ### Comprobación manual
 
 1. Arrancar el proyecto y buscar `chicken`: deben aparecer tarjetas reales.
@@ -100,10 +123,13 @@ Las pruebas de integración se ejecutaron en Node con jsdom como herramienta tem
 5. En DevTools, pestaña Network, seleccionar una conexión lenta y buscar: el mensaje de carga debe verse y los controles deben estar desactivados hasta terminar.
 6. Cambiar Network a Offline y hacer una búsqueda nueva: debe aparecer el error. Recuperar la conexión y pulsar «Volver a intentar»: deben cargarse los resultados sin recargar la página.
 7. Volver a dejar Network en su configuración normal después de probar.
+8. Buscar `chicken` y seleccionar una categoría disponible: las tarjetas y su contador deben cambiar; el resumen «En esta búsqueda» debe conservar sus recuentos. Volver a «Todas las categorías».
+9. Pulsar «Ver receta»: deben aparecer los ingredientes y la preparación. Pulsar «Volver a las recetas»: el detalle debe cerrarse y el foco volver a la tarjeta.
+10. Con un detalle abierto, realizar otra búsqueda: no deben mantenerse ingredientes, categorías ni recuentos de la anterior. En Network, filtrar y abrir detalles no debe producir peticiones al endpoint de búsqueda; las imágenes sí pueden descargarse al mostrarse.
 
 ## Uso de IA
 
-He utilizado Codex (OpenAI) para comparar ideas, generar la estructura, rehacer el diseño e implementar la búsqueda y los estados de la fase 2. Codex ha escrito el HTML, CSS y JavaScript, seleccionado la fotografía de portada y ejecutado las comprobaciones descritas arriba.
+He utilizado Codex (OpenAI) para comparar ideas, generar la estructura, rehacer el diseño e implementar las fases 2 y 3: búsqueda, estados, filtro, resumen y detalle. Codex ha escrito el HTML, CSS y JavaScript, seleccionado la fotografía de portada y ejecutado las comprobaciones descritas arriba.
 
 Prompts reales relevantes:
 
@@ -118,13 +144,13 @@ Prompts reales relevantes:
 ## Autopsia
 
 1. **Propagar los errores de la API hasta `main.js`.** Se descartó devolver `[]` desde un `catch` en `api.js`, porque eso haría parecer que un fallo de red es una búsqueda sin resultados. Solo una respuesta vacía válida se representa con un array vacío; los errores muestran un mensaje diferente y permiten reintentar.
-2. **Buscar al enviar el formulario y bloquear temporalmente los controles.** Se descartó consultar con cada pulsación porque produciría más peticiones y complicaría el orden de las respuestas. El envío con Buscar o Enter permite un flujo sencillo que se puede seguir con `async/await` y `try/catch/finally`.
+2. **Filtrar y abrir detalles con los datos de la búsqueda actual.** Se descartó consultar otro endpoint al cambiar de categoría o abrir una receta, porque la respuesta de búsqueda ya contiene esos datos. La ventaja es un flujo sencillo y menos peticiones; el límite es que las categorías y el resumen representan solo esa búsqueda. Esto no sustituye la caché de la fase 4, que evitará volver a pedir búsquedas repetidas.
 
 ## Fuente de los datos
 
 [Documentación de TheMealDB](https://www.themealdb.com/api.php). Se utiliza el endpoint de búsqueda por nombre `https://www.themealdb.com/api/json/v1/1/search.php` con el parámetro `s` y la clave de prueba `1`, permitida para uso educativo.
 
-Los filtros y resúmenes de la siguiente fase se aplicarán a las recetas cargadas en la búsqueda, no a toda la base de datos.
+Los filtros y resúmenes se aplican a las recetas cargadas en la búsqueda, no a toda la base de datos.
 
 ## Fotografía de portada
 

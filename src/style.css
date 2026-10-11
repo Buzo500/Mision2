@@ -246,6 +246,11 @@ button:disabled { border-color: #5e6a56; background-color: #5e6a56; }
 #estado-recetario { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 .punto-estado { width: 5px; height: 5px; border-radius: 50%; background-color: #9a512f; }
 .zona-resultados { margin-top: 36px; }
+.resumen { display: flex; align-items: baseline; gap: 28px; margin-bottom: 24px; }
+.resumen > p { flex-shrink: 0; margin: 0; color: #626b60; font-size: 11px; }
+.resumen ul { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 0; padding: 0; list-style: none; }
+.resumen li { display: flex; align-items: baseline; gap: 10px; font-size: 12px; }
+.resumen strong { font-family: Georgia, "Times New Roman", serif; font-size: 23px; font-weight: normal; }
 .estado-resultados { padding: 35px 20px; border-top: 1px solid #e0e2d7; text-align: center; }
 .estado-error { color: #91482f; }
 #boton-reintentar { margin-top: 24px; }
@@ -312,6 +317,38 @@ h3 { margin: 12px 0 7px; font-size: 26px; letter-spacing: -0.5px; }
   overflow-wrap: break-word;
 }
 .origen-receta { margin: 10px 0 0; color: #626b60; font-size: 12px; }
+.boton-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid #87927c;
+  color: #293c30;
+  background-color: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+.boton-texto:hover { border-bottom-color: #293c30; color: #9a512f; }
+.ver-receta { margin-top: 18px; }
+
+/* Detalle en la misma página, con ingredientes y preparación separados. */
+.detalle { margin-top: 48px; padding-top: 32px; border-top: 1px solid #87927c; }
+.detalle-cabecera { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.detalle-cabecera .antetitulo { margin: 0; }
+.detalle > .categoria-receta { margin-top: 32px; }
+#detalle-nombre { max-width: 1000px; margin: 10px 0 12px; font-size: 44px; line-height: 1.15; overflow-wrap: break-word; }
+.detalle-nota { margin: 0; color: #626b60; font-size: 11px; }
+.detalle-contenido { display: grid; grid-template-columns: minmax(240px, 1fr) 2fr; gap: 6%; margin-top: 36px; }
+.detalle-contenido > div { min-width: 0; }
+.detalle h4 { margin: 0 0 20px; font-family: Georgia, "Times New Roman", serif; font-size: 25px; font-weight: normal; }
+.detalle-ingredientes { align-self: start; padding: 24px; background-color: #e9ebdf; }
+.detalle-ingredientes ul { margin: 0; padding: 0; list-style: none; }
+.detalle-ingredientes li { display: flex; justify-content: space-between; gap: 24px; padding: 12px 0; border-bottom: 1px solid #cdd3c4; font-size: 13px; overflow-wrap: anywhere; }
+.detalle-ingredientes li:last-child { border-bottom: 0; }
+.detalle-ingredientes li span:last-child { color: #626b60; text-align: right; }
+#sin-ingredientes { margin: 0; color: #626b60; font-size: 13px; }
+#detalle-instrucciones { max-width: 80ch; margin: 0; color: #515e4c; font-size: 14px; line-height: 1.9; white-space: pre-line; overflow-wrap: break-word; }
 
 /* Cierre editorial. */
 .filosofia { padding: 64px 0; background-color: #e9ebdf; }

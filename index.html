@@ -65,7 +65,7 @@
           <div class="campo-categoria">
             <label for="categoria">Categoría</label>
             <select id="categoria" disabled>
-              <option value="todas">Próximamente</option>
+              <option value="">Todas las categorías</option>
             </select>
           </div>
         </form>
@@ -74,7 +74,10 @@
           <p id="estado-recetario"><span class="punto-estado" aria-hidden="true"></span> Recetas de TheMealDB</p>
         </div>
         <div class="zona-resultados" aria-labelledby="titulo-resultados">
-          <div id="resumen" class="resumen"></div>
+          <div id="resumen" class="resumen" hidden>
+            <p>En esta búsqueda</p>
+            <ul id="resumen-categorias" aria-label="Recetas por categoría"></ul>
+          </div>
           <div id="estado-resultados" class="estado-resultados">
             <span id="icono-estado" class="ilustracion-plato" aria-hidden="true"><span></span></span>
             <h3 id="titulo-resultados">La mesa está puesta.</h3>
@@ -83,7 +86,26 @@
           </div>
           <div id="recetas" class="recetas" aria-busy="false"></div>
         </div>
-        <section id="detalle" class="detalle" aria-label="Detalle de la receta" hidden></section>
+        <section id="detalle" class="detalle" aria-labelledby="detalle-nombre" hidden>
+          <div class="detalle-cabecera">
+            <p class="antetitulo">Del recetario a tu cocina</p>
+            <button id="cerrar-detalle" class="boton-texto" type="button">Volver a las recetas <span aria-hidden="true">↑</span></button>
+          </div>
+          <p id="detalle-origen" class="categoria-receta"></p>
+          <h3 id="detalle-nombre" tabindex="-1"></h3>
+          <p class="detalle-nota">Ingredientes y preparación en el idioma original de TheMealDB.</p>
+          <div class="detalle-contenido">
+            <div class="detalle-ingredientes">
+              <h4>Ingredientes</h4>
+              <p id="sin-ingredientes" hidden>No hay ingredientes disponibles para esta receta.</p>
+              <ul id="detalle-ingredientes"></ul>
+            </div>
+            <div class="detalle-preparacion">
+              <h4>Preparación</h4>
+              <p id="detalle-instrucciones"></p>
+            </div>
+          </div>
+        </section>
       </section>
 
       <section id="filosofia" class="filosofia" aria-labelledby="titulo-filosofia">
