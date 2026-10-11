@@ -7,6 +7,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 28px; }
 body, figure { margin: 0; }
 button, input, select { font: inherit; }
@@ -171,7 +172,7 @@ h1 em, h2 em { font-weight: normal; }
   text-transform: none;
 }
 
-/* Buscador y espacio para los resultados de la siguiente fase. */
+/* Buscador y resultados. */
 .explorador { padding-top: 48px; padding-bottom: 54px; border-top: 1px solid #d6d9cd; }
 .titulo-seccion {
   display: flex;
@@ -245,7 +246,11 @@ button:disabled { border-color: #5e6a56; background-color: #5e6a56; }
 #estado-recetario { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 .punto-estado { width: 5px; height: 5px; border-radius: 50%; background-color: #9a512f; }
 .zona-resultados { margin-top: 36px; }
-.estado-inicial { padding: 35px 20px; border-top: 1px solid #e0e2d7; text-align: center; }
+.estado-resultados { padding: 35px 20px; border-top: 1px solid #e0e2d7; text-align: center; }
+.estado-error { color: #91482f; }
+#boton-reintentar { margin-top: 24px; }
+.con-resultados { padding: 24px 0; text-align: left; }
+.con-resultados .mensaje { max-width: none; margin: 0; }
 .ilustracion-plato {
   display: inline-flex;
   align-items: center;
@@ -258,6 +263,55 @@ button:disabled { border-color: #5e6a56; background-color: #5e6a56; }
 .ilustracion-plato span { width: 34px; height: 34px; border: 1px solid #b9c0ab; border-radius: 50%; }
 h3 { margin: 12px 0 7px; font-size: 26px; letter-spacing: -0.5px; }
 .mensaje { max-width: 390px; margin: 0 auto; color: #626b60; font-size: 12px; }
+
+/* Tarjetas de la API: fotografía, categoría, nombre y procedencia. */
+.recetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 36px 28px;
+}
+.tarjeta-receta {
+  min-width: 0;
+  max-width: 440px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #d6d9cd;
+}
+.foto-receta {
+  display: grid;
+  aspect-ratio: 4 / 3;
+  background-color: #e9ebdf;
+}
+.foto-receta img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.sin-imagen {
+  align-self: center;
+  margin: 0;
+  padding: 24px;
+  color: #626b60;
+  font-size: 13px;
+  text-align: center;
+}
+.categoria-receta {
+  margin: 20px 0 8px;
+  color: #78563f;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.tarjeta-receta h4 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: normal;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+.origen-receta { margin: 10px 0 0; color: #626b60; font-size: 12px; }
 
 /* Cierre editorial. */
 .filosofia { padding: 64px 0; background-color: #e9ebdf; }

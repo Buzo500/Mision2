@@ -58,29 +58,30 @@
             <label for="busqueda">¿Qué te apetece cocinar?</label>
             <div class="fila-busqueda">
               <span class="icono-busqueda" aria-hidden="true"></span>
-              <input id="busqueda" name="busqueda" type="search" placeholder="Prueba con chicken, pasta, cake…" aria-describedby="ayuda-busqueda estado-recetario" required disabled />
-              <button id="boton-buscar" class="boton" type="submit" disabled>Buscar <span aria-hidden="true">↗</span></button>
+              <input id="busqueda" name="busqueda" type="search" placeholder="Prueba con chicken, pasta, cake…" aria-describedby="ayuda-busqueda" required />
+              <button id="boton-buscar" class="boton" type="submit">Buscar <span aria-hidden="true">↗</span></button>
             </div>
           </div>
           <div class="campo-categoria">
             <label for="categoria">Categoría</label>
-            <select id="categoria" aria-describedby="estado-recetario" disabled>
-              <option value="todas">Todas las categorías</option>
+            <select id="categoria" disabled>
+              <option value="todas">Próximamente</option>
             </select>
           </div>
         </form>
         <div class="notas-busqueda">
           <p id="ayuda-busqueda">Un apunte: busca en inglés, el idioma de las recetas de TheMealDB.</p>
-          <p id="estado-recetario"><span class="punto-estado" aria-hidden="true"></span> Recetario en preparación</p>
+          <p id="estado-recetario"><span class="punto-estado" aria-hidden="true"></span> Recetas de TheMealDB</p>
         </div>
         <div class="zona-resultados" aria-labelledby="titulo-resultados">
           <div id="resumen" class="resumen"></div>
-          <div class="estado-inicial">
-            <span class="ilustracion-plato" aria-hidden="true"><span></span></span>
+          <div id="estado-resultados" class="estado-resultados">
+            <span id="icono-estado" class="ilustracion-plato" aria-hidden="true"><span></span></span>
             <h3 id="titulo-resultados">La mesa está puesta.</h3>
             <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+            <button id="boton-reintentar" class="boton" type="button" hidden>Volver a intentar <span aria-hidden="true">↗</span></button>
           </div>
-          <div id="recetas" class="recetas"></div>
+          <div id="recetas" class="recetas" aria-busy="false"></div>
         </div>
         <section id="detalle" class="detalle" aria-label="Detalle de la receta" hidden></section>
       </section>
