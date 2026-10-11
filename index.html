@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f5ef" />
+    <meta name="description" content="Un recetario para los que viajan con el paladar. Descubre platos de otras cocinas con Pasaporte gastronómico." />
+    <title>Pasaporte gastronómico · El mundo, a la mesa</title>
+  </head>
+  <body>
+    <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
+    <header class="cabecera contenedor">
+      <a class="marca" href="#inicio" aria-label="Pasaporte gastronómico, inicio">
+        <span class="marca-nombre">pasaporte<span class="marca-punto">.</span></span>
+        <span class="marca-subtitulo">Gastronómico</span>
+      </a>
+      <nav class="navegacion" aria-label="Navegación principal">
+        <a class="enlace-activo" href="#explorador">El recetario</a>
+        <a href="#filosofia">Nuestra filosofía</a>
+      </nav>
+      <span class="nota-cabecera">Para viajar con el paladar <span aria-hidden="true">↗</span></span>
+    </header>
+
+    <main id="contenido">
+      <section id="inicio" class="portada contenedor" aria-labelledby="titulo-principal">
+        <div class="portada-texto">
+          <p class="antetitulo"><span class="raya" aria-hidden="true"></span> Un recetario sin fronteras</p>
+          <h1 id="titulo-principal">El mundo,<br />a la <em>mesa.</em></h1>
+          <p class="introduccion">Hay muchas formas de viajar.<br />La nuestra empieza en la cocina.</p>
+          <p class="descripcion">Descubre sabores de otros lugares, encuentra tu próxima receta y hazle sitio a algo nuevo.</p>
+          <a class="boton enlace-explorar" href="#explorador">Explorar el recetario <span aria-hidden="true">↗</span></a>
+          <div class="nota-portada">
+            <span class="estrella" aria-hidden="true">✳</span>
+            <p>Un poco de curiosidad.<br />Una buena receta. Nada más.</p>
+          </div>
+        </div>
+        <figure class="portada-foto">
+          <img src="/images/pasta-verde.jpg" alt="Un plato de pasta con setas, hojas verdes y queso sobre una mesa de madera." width="1400" height="1023" />
+          <div class="sello-foto" aria-hidden="true">
+            <span>Sin fronteras</span>
+            <span class="sello-centro">Buen<br /><em>provecho.</em></span>
+            <span>Con mucho gusto</span>
+          </div>
+          <figcaption><span>El placer de descubrir, el gusto de cocinar.</span><span aria-hidden="true">01 /</span></figcaption>
+        </figure>
+      </section>
+
+      <section id="explorador" class="explorador contenedor" aria-labelledby="titulo-explorador">
+        <div class="titulo-seccion">
+          <div>
+            <p class="antetitulo">01 / El recetario</p>
+            <h2 id="titulo-explorador">¿Dónde te lleva el <em>hambre?</em></h2>
+          </div>
+          <p>Empieza por ese plato que tienes en mente.<br />El siguiente descubrimiento puede estar aquí.</p>
+        </div>
+        <form id="formulario-busqueda" class="formulario-busqueda">
+          <div class="campo-busqueda">
+            <label for="busqueda">¿Qué te apetece cocinar?</label>
+            <div class="fila-busqueda">
+              <span class="icono-busqueda" aria-hidden="true"></span>
+              <input id="busqueda" name="busqueda" type="search" placeholder="Prueba con chicken, pasta, cake…" aria-describedby="ayuda-busqueda estado-recetario" required disabled />
+              <button id="boton-buscar" class="boton" type="submit" disabled>Buscar <span aria-hidden="true">↗</span></button>
+            </div>
+          </div>
+          <div class="campo-categoria">
+            <label for="categoria">Categoría</label>
+            <select id="categoria" aria-describedby="estado-recetario" disabled>
+              <option value="todas">Todas las categorías</option>
+            </select>
+          </div>
+        </form>
+        <div class="notas-busqueda">
+          <p id="ayuda-busqueda">Un apunte: busca en inglés, el idioma de las recetas de TheMealDB.</p>
+          <p id="estado-recetario"><span class="punto-estado" aria-hidden="true"></span> Recetario en preparación</p>
+        </div>
+        <div class="zona-resultados" aria-labelledby="titulo-resultados">
+          <div id="resumen" class="resumen"></div>
+          <div class="estado-inicial">
+            <span class="ilustracion-plato" aria-hidden="true"><span></span></span>
+            <h3 id="titulo-resultados">La mesa está puesta.</h3>
+            <p id="mensaje" class="mensaje" role="status" aria-live="polite"></p>
+          </div>
+          <div id="recetas" class="recetas"></div>
+        </div>
+        <section id="detalle" class="detalle" aria-label="Detalle de la receta" hidden></section>
+      </section>
+
+      <section id="filosofia" class="filosofia" aria-labelledby="titulo-filosofia">
+        <div class="contenedor filosofia-interior">
+          <div>
+            <p class="antetitulo">02 / Nuestra filosofía</p>
+            <h2 id="titulo-filosofia">Otras cocinas.<br />La misma <em>mesa.</em></h2>
+          </div>
+          <div class="filosofia-texto">
+            <p>No hace falta un billete de avión para salir de lo de siempre. A veces basta con un ingrediente distinto, una receta que no conocías y las ganas de probar.</p>
+            <p>Pasaporte gastronómico nace de esa idea: acercar otras cocinas a la tuya. Sin complicaciones. A tu ritmo. Y siempre con hambre de descubrir.</p>
+            <a class="enlace-texto" href="#explorador">Tu próximo viaje empieza aquí <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pie contenedor">
+      <a class="marca marca-pie" href="#inicio" aria-label="Pasaporte gastronómico, volver al inicio">
+        <span class="marca-nombre">pasaporte<span class="marca-punto">.</span></span>
+        <span class="marca-subtitulo">Gastronómico</span>
+      </a>
+      <p>Hecho para los que siempre quieren probar algo más.</p>
+      <div class="creditos">
+        <span>Recetario con <a href="https://www.themealdb.com/">TheMealDB</a></span>
+        <span>Fotografía de <a href="https://unsplash.com/">Unsplash</a></span>
+      </div>
+    </footer>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
