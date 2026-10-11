@@ -1,7 +1,15 @@
+import { leerCache, guardarCache } from "./cache.js";
+
 const URL_API = "https://www.themealdb.com/api/json/v1/1/search.php";
 
 export async function buscarRecetas(nombre) {
-  const parametros = new URLSearchParams({ s: nombre });
+  const busqueda = nombre.trim().toLowerCase();
+  const guardadas = leerCache(busqueda);
+
+  // null indica que no hay caché válida; [] es una búsqueda guardada sin resultados.
+  if (guardadas !== null) return guardadas;
+
+  const parametros = new URLSearchParams({ s: busqueda });
   const respuesta = await fetch(`${URL_API}?${parametros}`);
 
   if (!respuesta.ok) {
@@ -12,10 +20,12 @@ export async function buscarRecetas(nombre) {
 
   const datos = await respuesta.json();
 
-  if (datos?.meals === undefined) {
+  if (datos?.meals !== null && !Array.isArray(datos?.meals)) {
     throw new Error("La API ha devuelto una respuesta inesperada.");
   }
 
   // TheMealDB devuelve null cuando la búsqueda no encuentra recetas.
-  return datos.meals ?? [];
+  const recetas = datos.meals ?? [];
+  guardarCache(busqueda, recetas);
+  return recetas;
 }
