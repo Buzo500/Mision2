@@ -1,16 +1,7 @@
 import "./style.css";
-import { buscarRecetas } from "./api.js";
+import { buscarRecetas, ErrorBusqueda } from "./api.js";
 import { prepararRecetas, filtrarPorCategoria, resumirCategorias } from "./logica.js";
-import {
-  cambiarCarga,
-  mostrarEstado,
-  mostrarError,
-  mostrarRecetas,
-  mostrarCategorias,
-  mostrarResumen,
-  mostrarDetalle,
-  ocultarDetalle,
-} from "./render.js";
+import { iniciarRender } from "./render.js";
 
 const formulario = document.querySelector("#formulario-busqueda");
 const entrada = document.querySelector("#busqueda");
@@ -19,7 +10,34 @@ const categoria = document.querySelector("#categoria");
 const contenedorRecetas = document.querySelector("#recetas");
 const botonCerrarDetalle = document.querySelector("#cerrar-detalle");
 
-let cargando = false;
+const {
+  cambiarCarga,
+  mostrarEstado,
+  mostrarError,
+  mostrarRecetas,
+  mostrarCategorias,
+  mostrarResumen,
+  mostrarDetalle,
+  ocultarDetalle,
+} = iniciarRender({
+  mensaje: document.querySelector("#mensaje"),
+  estadoResultados: document.querySelector("#estado-resultados"),
+  tituloResultados: document.querySelector("#titulo-resultados"),
+  iconoEstado: document.querySelector("#icono-estado"),
+  contenedorRecetas,
+  botonReintentar,
+  selectorCategoria: categoria,
+  resumen: document.querySelector("#resumen"),
+  resumenCategorias: document.querySelector("#resumen-categorias"),
+  detalle: document.querySelector("#detalle"),
+  nombreDetalle: document.querySelector("#detalle-nombre"),
+  origenDetalle: document.querySelector("#detalle-origen"),
+  ingredientesDetalle: document.querySelector("#detalle-ingredientes"),
+  sinIngredientes: document.querySelector("#sin-ingredientes"),
+  instruccionesDetalle: document.querySelector("#detalle-instrucciones"),
+});
+
+let idBusquedaActual = 0;
 let ultimaBusqueda = "";
 let recetasCargadas = [];
 let recetasVisibles = [];
@@ -44,34 +62,42 @@ function actualizarResultados() {
 }
 
 async function realizarBusqueda(nombre) {
-  if (cargando) return;
+  // También una búsqueda vacía invalida cualquier respuesta anterior pendiente.
+  const idBusqueda = ++idBusquedaActual;
 
   limpiarResultados();
 
   if (!nombre) {
+    cambiarCarga(false);
     mostrarEstado("Falta el primer ingrediente.", "Escribe el nombre de un plato para buscar recetas.");
+    entrada.focus();
     return;
   }
 
   ultimaBusqueda = nombre;
-  cargando = true;
   cambiarCarga(true);
   mostrarEstado("Un momento, estamos en la cocina.", `Buscando recetas para «${nombre}»…`);
 
   try {
     const datos = await buscarRecetas(nombre);
+    if (idBusqueda !== idBusquedaActual) return;
+
     recetasCargadas = prepararRecetas(datos);
     const categorias = resumirCategorias(recetasCargadas);
     mostrarCategorias(categorias);
     mostrarResumen(categorias);
     actualizarResultados();
   } catch (error) {
+    if (idBusqueda !== idBusquedaActual) return;
+
     console.error("Error al buscar recetas:", error);
-    mostrarError();
+    mostrarError(error instanceof ErrorBusqueda ? error.message : undefined);
   } finally {
-    // También se recuperan los controles si la petición falla.
-    cargando = false;
-    cambiarCarga(false);
+    // Una petición antigua no puede quitar la carga ni recuperar el foco.
+    if (idBusqueda === idBusquedaActual) {
+      cambiarCarga(false);
+      entrada.focus();
+    }
   }
 }
 
@@ -80,13 +106,11 @@ formulario.addEventListener("submit", async (event) => {
   const nombre = entrada.value.trim();
   entrada.value = nombre;
   await realizarBusqueda(nombre);
-  entrada.focus();
 });
 
 botonReintentar.addEventListener("click", async () => {
   entrada.value = ultimaBusqueda;
   await realizarBusqueda(ultimaBusqueda);
-  entrada.focus();
 });
 
 // El filtro y el detalle usan los datos ya recibidos, sin otra petición.

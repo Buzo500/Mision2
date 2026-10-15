@@ -32,15 +32,11 @@ export function filtrarPorCategoria(recetas, categoria) {
 }
 
 export function resumirCategorias(recetas) {
-  return recetas.reduce((resumen, receta) => {
-    const grupo = resumen.find((elemento) => elemento.categoria === receta.categoria);
-
-    if (grupo) {
-      grupo.cantidad += 1;
-    } else {
-      resumen.push({ categoria: receta.categoria, cantidad: 1 });
-    }
-
+  const grupos = recetas.reduce((resumen, receta) => {
+    const cantidad = resumen.get(receta.categoria) ?? 0;
+    resumen.set(receta.categoria, cantidad + 1);
     return resumen;
-  }, []);
+  }, new Map());
+
+  return Array.from(grupos, ([categoria, cantidad]) => ({ categoria, cantidad }));
 }
